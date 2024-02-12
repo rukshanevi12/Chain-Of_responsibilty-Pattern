@@ -8,77 +8,80 @@ package package1;
  *
  * @author User
  */
-class A {
-    
-    X x;
-    B b;
-    
-    public A(X x) {
-        this.x = x;
-        b = new B(x);
+abstract class Handler {
+
+    Handler handler;
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
     
-  
-    
-    public void p() {
-           if (x.i == 0) {
-            System.out.println("Error-a");
+    public abstract void process(Client client);
+}
+
+class Handler1 extends Handler {
+
+
+    @Override
+    public void process(Client client) {
+        if (client.i == 0) {
+            System.out.println("Number is equal to zero");
         } else {
-            System.out.println("Success-a");
-            b.p();
+            System.out.println("Number is not equal to zero");
+            this.handler.process(client);
         }
     }
 }
 
-class B {
-    
-    X x;
-    C c;
-    
-    public B(X x) {
-        this.x = x;
-        c =  new C(x);
-    }
-    
-    public void p() {
-        if (x.i%5 == 0) {
-            System.out.println("Error-b");
+class Handler2 extends Handler {
+
+
+    @Override
+    public void process(Client client) {
+        if (client.i % 2 == 0) {
+            System.out.println("number is divided by 2");
+            this.handler.process(client);
         } else {
-            System.out.println("Success-b");
-            c.r();
+            System.out.println("number is not divided by 2");
+             this.handler.process(client);
         }
     }
 }
 
-class C {
-    
-    X x;
-    
-    public C(X x) {
-        this.x = x;
-    }
-    
-    public void r() {
-         if (x.i%2 == 0) {
-            System.out.println("Error-c");
+class Handler3 extends Handler {
+
+
+    @Override
+    public void process(Client client) {
+        if (client.i % 5 == 0) {
+            System.out.println("number is divided by 5");
         } else {
-            System.out.println("Success-c");
+             System.out.println("number is not divided by 5");
         }
     }
+
 }
 
-class X {
-    
+class Client {
+
     int i;
 }
 
 public class Test {
-    
+
     public static void main(String[] args) {
-        X x = new X();
-        x.i = 4;
+        Client client = new Client();
+        client.i = 0; //change the value of this to check if it is diviede by 2,5 or not
+
+        Handler1 handler1 = new Handler1();
+        Handler2 handler2 = new Handler2();
+        Handler3 handler3 = new Handler3();
         
-        A a = new A(x);
-        a.p();
+        handler1.setHandler(handler2);
+        handler2.setHandler(handler3);
+        
+        handler1.process(client);
+       
+        
     }
 }
